@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  truthsteer-engine:
+    build: .
+    container_name: truthsteer-llm
+    ports:
+      - "8000:8000"
+      - "8501:8501"
+    environment:
+      - MODEL_NAME=meta-llama/Meta-Llama-3-8B-Instruct
+      - TARGET_LAYER=14
+      - STEERING_ALPHA=2.5
+      - CONFIDENCE_THRESHOLD=0.40
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - ./data:/app/data
+      - ~/.cache/huggingface:/root/.cache/huggingface
